@@ -1,0 +1,26 @@
+name: Sync Tags from Upstream
+
+on:
+  schedule:
+    - cron: '0 4 * * 1' # 每天国际标准时间 0 点自动运行一次
+  workflow_dispatch: # 支持你在网页上手动点按钮触发
+
+# 关键：显式声明该 workflow 拥有写入权限
+permissions:
+  contents: write
+  
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Fork
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_T }}
+
+      - name: Sync Tags
+        run: |
+          git remote add upstream https://github.com/rtk-ai/rtk.git
+          git fetch upstream --tags
+          git push origin --tags
