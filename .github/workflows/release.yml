@@ -145,13 +145,6 @@ jobs:
     needs: [build, build-deb, build-rpm]
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/create-github-app-token@v3
-        id: app-token
-        with:
-          client-id: ${{ secrets.APP_CLIENT_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          permission-contents: write
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -198,4 +191,4 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           files: release/*
           prerelease: ${{ inputs.prerelease }}
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ secrets.SYNC_T }}
